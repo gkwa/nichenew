@@ -72,8 +72,12 @@ resource "github_branch_protection" "protect_all_branches" {
   allows_force_pushes             = true
 
   required_status_checks {
-    strict   = false
-    contexts = ["Build & Test (ubuntu-latest)"]
+    strict = false
+    contexts = [
+      "Build & Test (ubuntu-latest)",
+      "Build & Test (windows-latest)",
+      "Build & Test (macOS-latest)"
+    ]
   }
 }
 
