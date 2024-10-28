@@ -10,8 +10,8 @@ format:
 init:
     terraform init
 
-plan:
-    terraform plan -out=tfplan
+plan repo:
+    terraform plan -out=tfplan -var="target_repository={{ repo }}"
 
 apply:
     terraform apply tfplan
