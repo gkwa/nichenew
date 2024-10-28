@@ -31,7 +31,11 @@ resource "github_repository" "repo_settings" {
   has_projects    = data.github_repository.repo.has_projects
   has_wiki        = data.github_repository.repo.has_wiki
 
+  # Enable auto-merge
   allow_auto_merge       = true
+  allow_merge_commit     = true
+  allow_squash_merge     = true
+  allow_rebase_merge     = true
   delete_branch_on_merge = true
 
   vulnerability_alerts = true
@@ -46,51 +50,6 @@ resource "github_repository" "repo_settings" {
   }
 }
 
-# Create dependabot.yml file in the repository
-# main.tf unchanged except for dependabot_config content
-resource "github_repository_file" "dependabot_config" {
-  repository          = data.github_repository.repo.name
-  branch              = data.github_repository.repo.default_branch
-  file                = ".github/dependabot.yml"
-  content             = <<-EOT
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
-    open-pull-requests-limit: 10
-    auto-merge: true # Enable auto-merge
-    auto-merge-conditions:
-      - "status-success=Build & Test (ubuntu-latest)"
-  
-  - package-ecosystem: "gomod"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
-    open-pull-requests-limit: 10
-    auto-merge: true # Enable auto-merge
-    auto-merge-conditions:
-      - "status-success=Build & Test (ubuntu-latest)"
-EOT
-  commit_message      = "Add Dependabot configuration with auto-merge"
-  overwrite_on_create = true
-
-  depends_on = [
-    github_repository.repo_settings,
-    data.github_branch.default
-  ]
-}
-
-
 # Dependabot security updates
 resource "github_repository_dependabot_security_updates" "updates" {
   repository = data.github_repository.repo.name
@@ -98,11 +57,10 @@ resource "github_repository_dependabot_security_updates" "updates" {
 
   depends_on = [
     github_repository.repo_settings,
-    github_repository_file.dependabot_config
   ]
 }
 
-# Branch protection with only status checks, no PR approvals
+# Branch protection with minimal requirements to allow auto-merge
 resource "github_branch_protection" "protect_all_branches" {
   repository_id                   = data.github_repository.repo.name
   pattern                         = "*"
