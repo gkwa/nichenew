@@ -47,6 +47,7 @@ resource "github_repository" "repo_settings" {
 }
 
 # Create dependabot.yml file in the repository
+# main.tf unchanged except for dependabot_config content
 resource "github_repository_file" "dependabot_config" {
   repository          = data.github_repository.repo.name
   branch              = data.github_repository.repo.default_branch
@@ -63,6 +64,9 @@ updates:
         patterns:
           - "*"
     open-pull-requests-limit: 10
+    auto-merge: true # Enable auto-merge
+    auto-merge-conditions:
+      - "status-success=Build & Test (ubuntu-latest)"
   
   - package-ecosystem: "gomod"
     directory: "/"
@@ -73,8 +77,11 @@ updates:
         patterns:
           - "*"
     open-pull-requests-limit: 10
+    auto-merge: true # Enable auto-merge
+    auto-merge-conditions:
+      - "status-success=Build & Test (ubuntu-latest)"
 EOT
-  commit_message      = "Add Dependabot configuration"
+  commit_message      = "Add Dependabot configuration with auto-merge"
   overwrite_on_create = true
 
   depends_on = [
@@ -82,6 +89,7 @@ EOT
     data.github_branch.default
   ]
 }
+
 
 # Dependabot security updates
 resource "github_repository_dependabot_security_updates" "updates" {
