@@ -36,12 +36,6 @@ resource "github_branch_protection" "protect_branches" {
     strict   = false
     contexts = ["Build & Test (ubuntu-latest)"]
   }
-
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = false
-    require_code_owner_reviews      = false
-    required_approving_review_count = 0
-  }
 }
 
 resource "github_actions_repository_permissions" "actions_permissions" {
