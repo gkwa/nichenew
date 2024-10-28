@@ -16,8 +16,8 @@ plan repo:
 apply:
     terraform apply tfplan
 
-destroy:
-    terraform plan -destroy -out=tfplan
+destroy repo:
+    terraform plan -destroy -out=tfplan -var="target_repository={{ repo }}"
     terraform apply tfplan
 
 fmt:
