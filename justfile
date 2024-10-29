@@ -10,15 +10,32 @@ format:
 init:
     terraform init
 
-plan repo:
-    terraform plan -out=tfplan -var="target_repository={{ repo }}"
+import repo org:
+    terraform import \
+        -var="repository_owner={{ org }}" \
+        -var="target_repository={{ repo }}" \
+        github_repository.repo_settings {{ repo }}
+
+plan repo org:
+    terraform plan -out=tfplan \
+        -var="repository_owner={{ org }}" \
+        -var="target_repository={{ repo }}"
 
 apply:
     terraform apply tfplan
 
-destroy repo:
-    terraform plan -destroy -out=tfplan -var="target_repository={{ repo }}"
+destroy repo org:
+    terraform plan -destroy -out=tfplan \
+        -var="repository_owner={{ org }}" \
+        -var="target_repository={{ repo }}"
     terraform apply tfplan
 
 fmt:
     terraform fmt
+
+setup repo org:
+    just init
+    just import {{ repo }} {{ org }}
+    just format
+    just plan {{ repo }} {{ org }}
+    just apply
