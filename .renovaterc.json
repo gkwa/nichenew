@@ -21,11 +21,32 @@
       "matchDepTypes": [
         "*"
       ]
+    },
+    {
+      "matchDatasources": [
+        "terraform-provider"
+      ],
+      "matchDepTypes": [
+        "provider",
+        "required_provider"
+      ],
+      "groupName": "terraform-providers",
+      "semanticCommitType": "fix",
+      "labels": [
+        "dependencies",
+        "terraform"
+      ]
     }
   ],
   "platformAutomerge": true,
   "postUpdateOptions": [
     "gomodTidy",
     "gomodUpdateImportPaths"
-  ]
+  ],
+  "terraform": {
+    "commitMessageTopic": "Terraform {{depName}}",
+    "fileMatch": [
+      "\\.tf$"
+    ]
+  }
 }
