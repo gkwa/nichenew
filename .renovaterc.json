@@ -16,8 +16,8 @@
       ],
       "automerge": true,
       "automergeStrategy": "squash",
-      "automergeType": "pr",
-      "ignoreTests": false,
+      "automergeType": "branch",
+      "ignoreTests": true,
       "matchDepTypes": [
         "*"
       ]
