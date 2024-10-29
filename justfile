@@ -3,7 +3,7 @@ set shell := ["bash", "-uc"]
 default:
     @just --list
 
-format:
+fmt:
     terraform fmt -recursive .
     just --unstable --fmt
 
@@ -30,12 +30,8 @@ destroy repo org:
         -var="target_repository={{ repo }}"
     terraform apply tfplan
 
-fmt:
-    terraform fmt
-
 setup repo org:
     just init
     just import {{ repo }} {{ org }}
-    just format
     just plan {{ repo }} {{ org }}
     just apply
