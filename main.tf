@@ -24,6 +24,13 @@ data "github_branch" "default" {
 resource "github_repository" "repo_settings" {
   name = data.github_repository.repo.name
 
+  visibility      = data.github_repository.repo.visibility
+  has_issues      = data.github_repository.repo.has_issues
+  has_discussions = data.github_repository.repo.has_discussions
+  has_projects    = data.github_repository.repo.has_projects
+  has_wiki        = data.github_repository.repo.has_wiki
+
+  # Enable auto-merge
   allow_auto_merge       = true
   allow_merge_commit     = true
   allow_squash_merge     = true
