@@ -16,7 +16,7 @@ import repo org:
         -var="target_repository={{ repo }}" \
         github_repository.repo_settings {{ repo }}
 
-plan repo org:
+plan repo org: init
     terraform plan -out=tfplan \
         -var="repository_owner={{ org }}" \
         -var="target_repository={{ repo }}"
