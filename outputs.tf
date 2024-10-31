@@ -4,3 +4,4 @@ output "repository_settings" {
     name = data.github_repository.repo.name
   }
 }
+

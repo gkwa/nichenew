@@ -86,3 +86,4 @@ resource "github_actions_repository_permissions" "actions_permissions" {
   allowed_actions = "all"
   enabled         = true
 }
+
