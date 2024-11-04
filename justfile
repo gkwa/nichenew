@@ -16,11 +16,18 @@ import repo org="":
         terraform import \
             -var="target_repository={{ repo }}" \
             github_repository.repo_settings {{ repo }}
+        terraform import \
+            -var="target_repository={{ repo }}" \
+            github_branch_protection.protect_all_branches {{ repo }}:*
     else
         terraform import \
             -var="repository_owner={{ org }}" \
             -var="target_repository={{ repo }}" \
             github_repository.repo_settings {{ repo }}
+        terraform import \
+            -var="repository_owner={{ org }}" \
+            -var="target_repository={{ repo }}" \
+            github_branch_protection.protect_all_branches {{ repo }}:*
     fi
 
 plan repo org="": init
