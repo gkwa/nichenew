@@ -10,24 +10,17 @@ fmt:
 init:
     terraform init
 
-import repo org="":
+import repo org="": init
     #!/usr/bin/env bash
     if [ -z "{{ org }}" ]; then
-        terraform import \
+        terraform plan \
             -var="target_repository={{ repo }}" \
-            github_repository.repo_settings {{ repo }}
-        terraform import \
-            -var="target_repository={{ repo }}" \
-            github_branch_protection.protect_all_branches {{ repo }}:*
+            -generate-config-out=generated_resources.tf
     else
-        terraform import \
+        terraform plan \
             -var="repository_owner={{ org }}" \
             -var="target_repository={{ repo }}" \
-            github_repository.repo_settings {{ repo }}
-        terraform import \
-            -var="repository_owner={{ org }}" \
-            -var="target_repository={{ repo }}" \
-            github_branch_protection.protect_all_branches {{ repo }}:*
+            -generate-config-out=generated_resources.tf
     fi
 
 plan repo org="": init
