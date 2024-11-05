@@ -59,8 +59,23 @@ resource "github_repository_dependabot_security_updates" "updates" {
   ]
 }
 
+# Data source to check if branch protection exists
+data "github_branch_protection_rules" "existing" {
+  repository = data.github_repository.repo.name
+}
+
+locals {
+  # Check if wildcard pattern exists in current branch protection rules
+  has_wildcard_protection = contains([
+    for rule in data.github_branch_protection_rules.existing.rules : rule.pattern
+  ], "*")
+}
+
 # Branch protection with minimal requirements to allow auto-merge
 resource "github_branch_protection" "protect_all_branches" {
+  # Only create if wildcard protection doesn't exist
+  count = local.has_wildcard_protection ? 0 : 1
+
   repository_id                   = data.github_repository.repo.name
   pattern                         = "*"
   enforce_admins                  = false
@@ -86,4 +101,3 @@ resource "github_actions_repository_permissions" "actions_permissions" {
   allowed_actions = "all"
   enabled         = true
 }
-
