@@ -78,6 +78,11 @@ resource "github_branch_protection" "protect_all_branches" {
       "Build & Test (macOS-latest)"
     ]
   }
+
+  # If the import fails (because protection doesn't exist), this resource will be ignored
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 # GitHub Actions permissions

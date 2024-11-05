@@ -1,5 +1,9 @@
 set shell := ["bash", "-uc"]
 
+# Default repository owner from terraform.tfvars
+
+default_owner := "gkwa"
+
 default:
     @just --list
 
@@ -9,19 +13,6 @@ fmt:
 
 init:
     terraform init
-
-import repo org="":
-    #!/usr/bin/env bash
-    if [ -z "{{ org }}" ]; then
-        terraform import \
-            -var="target_repository={{ repo }}" \
-            github_repository.repo_settings {{ repo }}
-    else
-        terraform import \
-            -var="repository_owner={{ org }}" \
-            -var="target_repository={{ repo }}" \
-            github_repository.repo_settings {{ repo }}
-    fi
 
 plan repo org="": init
     #!/usr/bin/env bash
@@ -51,6 +42,5 @@ destroy repo org="":
 
 setup repo org="":
     just init
-    just import {{ repo }} {{ org }}
     just plan {{ repo }} {{ org }}
     just apply
