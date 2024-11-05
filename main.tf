@@ -78,11 +78,6 @@ resource "github_branch_protection" "protect_all_branches" {
       "Build & Test (macOS-latest)"
     ]
   }
-
-  lifecycle {
-    # Prevent Terraform from trying to manage branch protection if it already exists
-    ignore_changes = all
-  }
 }
 
 # GitHub Actions permissions
@@ -91,3 +86,4 @@ resource "github_actions_repository_permissions" "actions_permissions" {
   allowed_actions = "all"
   enabled         = true
 }
+
