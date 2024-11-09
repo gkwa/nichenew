@@ -5,3 +5,9 @@ output "repository_settings" {
   }
 }
 
+output "configured_secrets" {
+  value       = keys(local.secrets)
+  description = "List of secret names configured from .env file"
+  sensitive   = false
+}
+

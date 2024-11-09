@@ -20,6 +20,15 @@ data "github_branch" "default" {
   branch     = data.github_repository.repo.default_branch
 }
 
+locals {
+  env_file = file("${path.module}/.env")
+  secrets = {
+    for line in split("\n", local.env_file) :
+    split("=", line)[0] => split("=", line)[1]
+    if length(split("=", line)) == 2
+  }
+}
+
 # Repository settings including security features
 resource "github_repository" "repo_settings" {
   name = data.github_repository.repo.name
@@ -90,5 +99,14 @@ resource "github_actions_repository_permissions" "actions_permissions" {
   repository      = var.target_repository
   allowed_actions = "all"
   enabled         = true
+}
+
+# Secrets from .env file
+resource "github_actions_secret" "repository_secrets" {
+  for_each = local.secrets
+
+  repository      = github_repository.repo_settings.name
+  secret_name     = each.key
+  plaintext_value = each.value
 }
 
