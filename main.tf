@@ -73,9 +73,7 @@ resource "github_branch_protection" "protect_all_branches" {
   required_status_checks {
     strict = false
     contexts = [
-      "Build & Test (ubuntu-latest)",
-      "Build & Test (windows-latest)",
-      "Build & Test (macOS-latest)"
+      "All Tests Passed",
     ]
   }
 
